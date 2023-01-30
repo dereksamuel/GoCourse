@@ -40,3 +40,5 @@ func main() {
 		}
 	}
 }
+
+func doubleReturn(a int) (c, d int) { return a, a * 2 }
