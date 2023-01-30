@@ -1,41 +1,28 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
-type figures2d interface { // para verificar las funciones
-	getArea() float64 // solo funciona porque los structs tienen el method getArea
-}
+func say(text string, wg *sync.WaitGroup) {
+	defer wg.Done() // esperar que sea la ultima que se ejecute
 
-type quad struct {
-	base float64
-}
-
-func (newQuad quad) getArea() float64 {
-	return newQuad.base * newQuad.base
-}
-
-type rectangle struct {
-	base   float64
-	height float64
-}
-
-func (newRectangle rectangle) getArea() float64 {
-	return newRectangle.base * newRectangle.height
-}
-
-func calculate(figures figures2d) {
-	fmt.Println("Area:", figures.getArea())
+	fmt.Println(text)
 }
 
 func main() {
-	mySquad := quad{base: 5}
+	var wg sync.WaitGroup // es mas complejo mantenerlo
 
-	myRectangle := rectangle{base: 5, height: 2}
+	fmt.Println("Hello")
+	wg.Add(1)              // anadimos una goroutine
+	go say("Hello 2", &wg) // ejecutar con concurrencia y no queda en mismo hilo de ejecucion de main que acaba en siguiente linea
+	// time.Sleep(time.Second * 1) // no es recomendado, pero le da tiempo necesario a la goroutine
+	fmt.Println("Hello 3")
+	wg.Wait() // esperar hasta que wg.Done se ejecute
 
-	calculate(mySquad)
-	calculate(myRectangle)
-
-	// lista de interfaces
-	myInterface := []interface{}{"Hola", 1, 2, 3, 84, -5}
-	fmt.Println(myInterface)
+	// funcion anonima
+	go func(msg string) {
+		fmt.Println(msg)
+	}("Hello")
 }
