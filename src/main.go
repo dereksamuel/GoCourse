@@ -1,28 +1,16 @@
 package main
 
-import (
-	"fmt"
-	"sync"
-)
+import "fmt"
 
-func say(text string, wg *sync.WaitGroup) {
-	defer wg.Done() // esperar que sea la ultima que se ejecute
-
-	fmt.Println(text)
+func say(text string, c chan<- string) { // solo de entrada
+	c <- text // se le manda el text atributte COM UN PIPELINE
 }
 
 func main() {
-	var wg sync.WaitGroup // es mas complejo mantenerlo
+	channel := make(chan string, 1) // tipo del dato del canal, y buena practica es definirle cantidad limite
 
+	go say("Bye", channel)
 	fmt.Println("Hello")
-	wg.Add(1)              // anadimos una goroutine
-	go say("Hello 2", &wg) // ejecutar con concurrencia y no queda en mismo hilo de ejecucion de main que acaba en siguiente linea
-	// time.Sleep(time.Second * 1) // no es recomendado, pero le da tiempo necesario a la goroutine
-	fmt.Println("Hello 3")
-	wg.Wait() // esperar hasta que wg.Done se ejecute
-
-	// funcion anonima
-	go func(msg string) {
-		fmt.Println(msg)
-	}("Hello")
+	fmt.Println(<-channel)
+	<-channel // ESTO BLOQUEA LA FUNC main
 }
