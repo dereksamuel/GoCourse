@@ -34,4 +34,8 @@ func main() {
 
 	calculate(mySquad)
 	calculate(myRectangle)
+
+	// lista de interfaces
+	myInterface := []interface{}{"Hola", 1, 2, 3, 84, -5}
+	fmt.Println(myInterface)
 }
