@@ -1,36 +1,37 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
-type Pc struct {
-	Ram       int
-	Disk_rang int
-	Brand     string
+type figures2d interface { // para verificar las funciones
+	getArea() float64 // solo funciona porque los structs tienen el method getArea
 }
 
-// un ping nos va a retornar un mensaje a detalle
-func (myPC Pc) PingMethod(anotherMsg string) {
-	fmt.Println("-*-*-*-*-*-*-*-*-* ping -*-*-*-*-*-*-*-*-*")
-	fmt.Println(anotherMsg)
-	fmt.Println(myPC.Brand, "Pong")
-	fmt.Println("-*-*-*-*-*-*-*-*-* ping end -*-*-*-*-*-*-*-*-*")
+type quad struct {
+	base float64
 }
 
-func (myPC *Pc) DuplicateRam() {
-	myPC.Ram = myPC.Ram * 2
+func (newQuad quad) getArea() float64 {
+	return newQuad.base * newQuad.base
 }
 
-// *pc: acceder a values del valor en memoria de myPC
+type rectangle struct {
+	base   float64
+	height float64
+}
 
-func (myPCArg Pc) String() string {
-	return fmt.Sprintf("Ram: %d, DiskRange %d, Brand %s", myPCArg.Ram, myPCArg.Disk_rang, myPCArg.Brand) // va a crear un string
+func (newRectangle rectangle) getArea() float64 {
+	return newRectangle.base * newRectangle.height
+}
+
+func calculate(figures figures2d) {
+	fmt.Println("Area:", figures.getArea())
 }
 
 func main() {
-	myPc := Pc{Ram: 15, Brand: "msi", Disk_rang: 100}
+	mySquad := quad{base: 5}
 
-	fmt.Println(myPc.String())
-	fmt.Println(myPc)
+	myRectangle := rectangle{base: 5, height: 2}
+
+	calculate(mySquad)
+	calculate(myRectangle)
 }
